@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Member 2",
+    "email": "user75@example.com",
+    "phone": "+91-540-285-4911",
+    "member_type": "student",
+    "age": 19
+  },
+  {
+    "name": "Member 4",
+    "email": "user91@example.com",
+    "phone": "+91-155-160-1559",
+    "member_type": "student",
+    "age": 26
+  },
+  {
+    "name": "Member 8",
+    "email": "user12@gmail.com",
+    "phone": "+91-956-896-5799",
+    "member_type": "student",
+    "age": 21
+  },
+  {
+    "name": "Member 10",
+    "email": "user99@example.com",
+    "phone": "+91-823-014-2316",
+    "member_type": "student",
+    "age": 28
+  },
+  {
+    "name": "Member 12",
+    "email": "user33@gmail.com",
+    "phone": "+91-777-123-4567",
+    "member_type": "student",
+    "age": 20
+  },
+  {
+    "name": "Member 16",
+    "email": "user83@example.com",
+    "phone": "+91-912-121-2121",
+    "member_type": "student",
+    "age": 24
+  },
+  {
+    "name": "Member 18",
+    "email": "user29@gmail.com",
+    "phone": "+91-555-566-6777",
+    "member_type": "student",
+    "age": 23
+  },
+  {
+    "name": "Member 20",
+    "email": "user93@example.com",
+    "phone": "+91-770-088-0099",
+    "member_type": "student",
+    "age": 27
+  },
+  {
+    "name": "Member 22",
+    "email": "user61@example.com",
+    "phone": "+91-999-900-0111",
+    "member_type": "student",
+    "age": 22
+  },
+  {
+    "name": "Member 24",
+    "email": "user18@gmail.com",
+    "phone": "+91-778-899-0011",
+    "member_type": "student",
+    "age": 19
+  },
+  {
+    "name": "Member 26",
+    "email": "user90@invalid.com",
+    "phone": "+91-945-678-9012",
+    "member_type": "student",
+    "age": 21
+  },
+  {
+    "name": "Member 29",
+    "email": "user66@example.com",
+    "phone": "+91-787-878-7878",
+    "member_type": "faculty",
+    "age": 51
+  },
+  {
+    "name": "Member 31",
+    "email": "user21@example.com",
+    "phone": "+91-929-292-9292",
+    "member_type": "faculty",
+    "age": 38
+  },
+  {
+    "name": "Member 34",
+    "email": "user19@example.com",
+    "phone": "+91-616-161-6161",
+    "member_type": "student",
+    "age": 23
+  }
+]
