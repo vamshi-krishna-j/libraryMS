@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Orwell, George",
+    "birth_date": null,
+    "biography": "Bio of Orwell, George",
+    "nationality": "British"
+  },
+  {
+    "name": "J.K. Rowling",
+    "birth_date": null,
+    "biography": "Bio of J.K. Rowling",
+    "nationality": "British"
+  },
+  {
+    "name": "Agatha Christie",
+    "birth_date": null,
+    "biography": "Bio of Agatha Christie",
+    "nationality": "British"
+  }
+]
