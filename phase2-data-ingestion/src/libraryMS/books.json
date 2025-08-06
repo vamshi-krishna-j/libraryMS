@@ -1,82 +1,74 @@
 [
   {
-    "title": "Campbell Biology, Books a la Carte Plus Mastering Biology with Etext -- Access Card Package",
-    "isbn": "9780133922851",
-    "publication_date": "2025-03-03T12:50:42.284123",
-    "author": "Jane B. Reece",
+    "title": "\ubb38\ud654\uc5f0\uad6c",
+    "isbn": "897735496X",
+    "publication_date": "2025-07-23T01:53:12.281371",
+    "author": "Stephen Greenblatt",
+    "pages": 570,
+    "price": "0.00"
+  },
+  {
+    "title": "Die Erfindung der Intoleranz",
+    "isbn": "9783835335752",
+    "publication_date": "2025-05-31T06:13:14.657245",
+    "author": "Stephen Greenblatt",
+    "pages": 143,
+    "price": "0.00"
+  },
+  {
+    "title": "Marvelous Possessions",
+    "isbn": "9780226525181",
+    "publication_date": "2024-08-18T02:54:46.797753",
+    "author": "Stephen Greenblatt",
+    "pages": 226,
+    "price": "0.00"
+  },
+  {
+    "title": "Dark Renaissance",
+    "isbn": "9781847927149",
+    "publication_date": "2025-01-24T20:03:47.458270",
+    "author": "Stephen Greenblatt",
+    "pages": 352,
+    "price": "0.00"
+  },
+  {
+    "title": "Hamlet in Purgatory",
+    "isbn": "9781400830565",
+    "publication_date": "2024-08-17T16:48:43.209550",
+    "author": "Stephen Greenblatt",
+    "pages": 352,
+    "price": "0.00"
+  },
+  {
+    "title": "Cultural Mobility",
+    "isbn": "9781282466753",
+    "publication_date": "2024-09-17T17:08:41.527001",
+    "author": "Stephen Greenblatt",
+    "pages": 271,
+    "price": "0.00"
+  },
+  {
+    "title": "Shakespeare's Montaigne",
+    "isbn": "9781306910545",
+    "publication_date": "2022-09-17T10:59:02.153018",
+    "author": "Stephen Greenblatt",
     "pages": 0,
     "price": "0.00"
   },
   {
-    "title": "EBook Instant Access for Investigating Biology Lab Manual, Global Edition",
-    "isbn": "9781292061481",
-    "publication_date": "2024-01-30T23:13:21.826625",
-    "author": "Jane B. Reece",
-    "pages": 0,
+    "title": "New Historicism",
+    "isbn": "9783825222659",
+    "publication_date": "2024-09-16T18:00:48.335172",
+    "author": "Stephen Greenblatt",
+    "pages": 279,
     "price": "0.00"
   },
   {
-    "title": "Campbell Essential Biology with Physiology Second Custom Edition for Houston Co",
-    "isbn": "9781323740989",
-    "publication_date": "2023-12-20T01:49:50.467841",
-    "author": "Jane B. Reece",
-    "pages": 0,
-    "price": "0.00"
-  },
-  {
-    "title": "Campbell Biology Custom Edition for Ramapo",
-    "isbn": "9781256320029",
-    "publication_date": "2023-12-20T01:30:36.858629",
-    "author": "Jane B. Reece",
-    "pages": 0,
-    "price": "0.00"
-  },
-  {
-    "title": "Modified Mastering Biology with Pearson eText -- Standalone Access Card -- for Campbell Biology",
-    "isbn": "9780321946508",
-    "publication_date": "2023-12-19T21:54:26.376821",
-    "author": "Jane B. Reece",
-    "pages": 0,
-    "price": "0.00"
-  },
-  {
-    "title": "Campbell Essential Biology & Modified MasteringBiology with Pearson eText -- ValuePack Access Card -- for Campbell Essential Biology (with Physiology chapters) Package",
-    "isbn": "9780321944481",
-    "publication_date": "2023-12-19T21:54:16.173268",
-    "author": "Jane B. Reece",
-    "pages": 0,
-    "price": "0.00"
-  },
-  {
-    "title": "Campbell Biology in Focus & Modified MasteringBiology with Pearson eText -- ValuePack Access Card Package",
-    "isbn": "9780321932839",
-    "publication_date": "2023-12-19T21:53:19.820385",
-    "author": "Jane B. Reece",
-    "pages": 0,
-    "price": "0.00"
-  },
-  {
-    "title": "Campbell Essential Biology, Books a la Carte Plus MasteringBiology with eText -- Access Card Package (5th Edition)",
-    "isbn": "9780321788245",
-    "publication_date": "2023-12-19T21:52:52.293350",
-    "author": "Jane B. Reece",
-    "pages": 0,
-    "price": "0.00"
-  },
-  {
-    "title": "Campbell Essential Biology, Books A La Carte Plus Masteringbiology (4th Edition)",
-    "isbn": "9780321698155",
-    "publication_date": "2023-12-19T21:52:09.912298",
-    "author": "Jane B. Reece",
-    "pages": 0,
-    "price": "0.00"
-  },
-  {
-    "title": "Campbell Essential Biology with Physiology, Books a la Carte Plus Mastering Biology with eText -- Access Card Package (5th Edition)",
-    "isbn": "9780134057491",
-    "publication_date": "2023-12-19T20:42:42.130906",
-    "author": "Jane B. Reece",
-    "pages": 0,
+    "title": "Ces merveilleuses possessions",
+    "isbn": "2251380337",
+    "publication_date": "2024-07-13T22:56:37.378559",
+    "author": "Stephen Greenblatt",
+    "pages": 298,
     "price": "0.00"
   }
 ]

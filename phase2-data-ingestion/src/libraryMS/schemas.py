@@ -19,15 +19,34 @@ def clean_phone(phone: str) -> Optional[str]:
 
 def validate_isbn(isbn: str) -> Optional[str]:
     isbn = re.sub(r'[-\s]', '', str(isbn))
-    if re.match(r'^\d{13}$', isbn):
+    if re.match(r'^\d{13}$', isbn) or re.match(r'^\d{10}$', isbn):
         return isbn
     return None
 
+
 def parse_date_safe(value: str) -> Optional[date]:
-    try:
-        return datetime.strptime(value, "%Y-%m-%d").date()
-    except Exception:
+    if not value or not isinstance(value, str):
         return None
+
+    value = value.strip()  # strip once
+
+    formats = [
+        "%Y-%m-%d",
+        "%Y-%m",
+        "%Y",
+        "%B %d, %Y",
+        "%b %d, %Y",
+        "%Y-%m-%dT%H:%M:%S.%f",
+        "%Y-%m-%dT%H:%M:%S",
+    ]
+
+    for fmt in formats:
+        try:
+            return datetime.strptime(value, fmt).date()
+        except ValueError:
+            continue
+
+    return None
 
 # Pydantic Schemas
 
@@ -52,7 +71,7 @@ class MemberSchema(BaseModel):
 
 class AuthorSchema(BaseModel):
     name: str
-    birth_date: Optional[str] = None
+    birth_date: Optional[date] = None
     biography: str = ""
     nationality: str = ""
 
@@ -67,7 +86,7 @@ class AuthorSchema(BaseModel):
 class BookSchema(BaseModel):
     title: str
     isbn: str
-    publication_date: Optional[str] = None
+    publication_date: Optional[date] = None
     author: str
     pages: int = 0
     price: str = "0.00"
@@ -87,6 +106,7 @@ class BookSchema(BaseModel):
     @field_validator('publication_date', mode='before')
     @classmethod
     def parse_date(cls, v): return parse_date_safe(v)
+
 
 class LibrarySchema(BaseModel):
     name: str

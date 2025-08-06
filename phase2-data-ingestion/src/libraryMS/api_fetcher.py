@@ -109,7 +109,21 @@ def main():
                     continue
 
                 pub_date = work_details.get("created", {}).get("value")
+                print(f"[DEBUG] Raw pub_date from API for '{title}': {pub_date}")
+
                 pages = work_details.get("number_of_pages", 0)
+                if not pages:
+                    editions = client.get_work_editions(work_key)
+                    edition_list = editions.get("entries", [])
+                    for ed in edition_list:
+                        pages = ed.get("number_of_pages")
+                        if pages:
+                            break
+
+                if not pages:
+                    pages = 0
+
+                    print(f"[DEBUG] Pages found for '{title}': {pages}")
 
                 book_data = {
                     "title": title,
