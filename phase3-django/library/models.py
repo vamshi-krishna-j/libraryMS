@@ -1,8 +1,10 @@
 from django.db import models
+from django.utils import timezone
+
 
 
 class Author(models.Model):
-    author_id = models.IntegerField(primary_key=True)
+    author_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
@@ -85,7 +87,7 @@ class Category(models.Model):
 
 
 class Lib(models.Model):
-    library_id = models.IntegerField(primary_key=True)
+    library_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     campus_location = models.CharField(max_length=50, blank=True, null=True)
     contact_email = models.EmailField(max_length=50, blank=True, null=True)
@@ -99,13 +101,24 @@ class Lib(models.Model):
 
 
 class Member(models.Model):
-    member_id = models.IntegerField(primary_key=True)
-    first_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True)
-    email = models.CharField(max_length=100, blank=True, null=True)
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    member_type = models.CharField(max_length=20, blank=True, null=True)
-    registration_date = models.DateField(blank=True, null=True)
+    member_id = models.AutoField(primary_key=True)
+    class MemberType(models.TextChoices):
+        STUDENT = 'student', 'Student'
+        FACULTY = 'faculty', 'Faculty'
+
+
+    first_name = models.CharField(max_length=50, blank=True, default='Unknown')
+    last_name = models.CharField(max_length=50, blank=True, default='Unknown')
+    email = models.EmailField(default='test@example.com')
+    phone = models.CharField(max_length=20, blank=True, default='0000000000')
+    member_type = models.CharField(
+        max_length=10,
+        choices=MemberType.choices,
+        default=MemberType.STUDENT
+    )
+    registration_date = models.DateField(default=timezone.now)
+
+
 
     class Meta:
         managed = True

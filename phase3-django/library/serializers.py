@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Lib, Book, Author, Category, Member, Borrowing, Review
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+
 
 
 class LibrarySerializer(serializers.ModelSerializer):
@@ -47,6 +49,32 @@ class MemberSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         if not value.endswith('@gmail.com'):
             raise serializers.ValidationError("Only Gmail addresses are accepted.")
+        return value
+
+    def validate_member_id(self, value):
+        if value < 0:
+            raise serializers.ValidationError("Member ID cannot be negative.")
+        return value
+
+    def validate_first_name(self, value):
+        if value and value[0].isdigit():
+            raise serializers.ValidationError("First name cannot start with a number.")
+        return value
+
+    def validate_last_name(self, value):
+        if value and value[0].isdigit():
+            raise serializers.ValidationError("Last name cannot start with a number.")
+        return value
+
+    def validate_phone(self, value):
+        try:
+            phone_int = int(value)
+        except ValueError:
+            raise serializers.ValidationError("Phone number must be a number.")
+
+        if not (1000000000 <= phone_int <= 9999999999):
+            raise serializers.ValidationError("Phone number must be a 10-digit integer.")
+
         return value
 
 
