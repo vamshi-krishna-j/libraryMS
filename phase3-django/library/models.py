@@ -19,7 +19,7 @@ class Author(models.Model):
 
 
 class Book(models.Model):
-    book_id = models.IntegerField(primary_key=True)
+    book_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     isbn = models.CharField(unique=True, max_length=20, blank=True, null=True)
     publication_date = models.DateField(blank=True, null=True)
@@ -35,7 +35,7 @@ class Book(models.Model):
 
 
 class BookAuthor(models.Model):
-    book = models.ForeignKey(Book, models.CASCADE)
+    book = models.ForeignKey(Book, models.CASCADE, related_name='bookauthor')
     author = models.ForeignKey(Author, models.CASCADE)
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
@@ -46,7 +46,7 @@ class BookAuthor(models.Model):
 
 
 class BookCategory(models.Model):
-    book = models.ForeignKey(Book, models.CASCADE)
+    book = models.ForeignKey(Book, related_name='bookcategory', on_delete=models.CASCADE)
     category = models.ForeignKey('Category', models.CASCADE)
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
@@ -72,6 +72,7 @@ class Borrowing(models.Model):
     class Meta:
         managed = True
         db_table = 'borrowing'
+
 
 
 class Category(models.Model):

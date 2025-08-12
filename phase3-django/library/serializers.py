@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Lib, Book, Author, Category, Member, Borrowing, Review
+from .models import Lib, Book, Author, Category, Member, Borrowing, Review, BookAuthor
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
@@ -34,6 +34,12 @@ class AuthorSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Birth date cannot be in the future.")
         return value
 
+class BookAuthorSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True)  # Use the AuthorSerializer here
+
+    class Meta:
+        model = BookAuthor
+        fields = ['author']
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
