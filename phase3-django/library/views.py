@@ -8,6 +8,8 @@ from django.utils import timezone
 from .filter import BorrowingFilter
 from rest_framework.decorators import api_view
 from rest_framework import status
+from django.views import View
+from datetime import date, timedelta
 from .models import Lib, Book, Author, Category, Member, Borrowing, Review
 from .serializers import (
     LibrarySerializer,
@@ -132,13 +134,13 @@ class BorrowBookView(APIView):
         member_id = request.data.get('member_id')
 
         if not book_id or not member_id:
-            return Response({'error': 'Missing book_id or member_id'}, status=HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Missing book_id or member_id'}, status=status.HTTP_400_BAD_REQUEST)
 
         book = get_object_or_404(Book, book_id=book_id)  # Fix here
         member = get_object_or_404(Member, member_id=member_id)  # Fix here if needed
 
         if book.available_copies <= 0:
-            return Response({'error': 'Book not available'}, status=HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Book not available'}, status=status.HTTP_400_BAD_REQUEST)
 
         if Borrowing.objects.filter(book=book, member=member, return_date__isnull=True).exists():
             return Response({'error': 'This member already borrowed this book and has not returned it.'}, status=HTTP_400_BAD_REQUEST)
@@ -156,7 +158,7 @@ class BorrowBookView(APIView):
         book.available_copies -= 1
         book.save()
 
-        return Response({'message': 'Book borrowed successfully'}, status=HTTP_200_OK)
+        return Response({'message': 'Book borrowed successfully', 'available_copies': book.available_copies}, status=status.HTTP_200_OK)
 
 class ReturnBookView(APIView):
     def post(self, request):
@@ -179,10 +181,10 @@ class ReturnBookView(APIView):
         borrowing.save()
 
         book = borrowing.book
-        book.borrowed_copies = max(book.borrowed_copies - 1, 0)
+        book.available_copies +=1
         book.save()
 
-        return Response({'message': 'Book returned successfully'})
+        return Response({'message': 'Book returned successfully', 'available_copies': book.available_copies}, status=status.HTTP_200_OK)
 
 
 class StatisticsView(APIView):
@@ -222,7 +224,7 @@ class StatisticsView(APIView):
 #         due_date=timezone.now().date() + timezone.timedelta(days=14)  # due in 2 weeks
 #     )
 #     return Response({"message": "Book borrowed successfully", "borrowing_id": borrowing.borrowing_id})
-#
+
 # @api_view(['POST'])
 # def return_book(request):
 #     borrowing_id = request.data.get('borrowing_id')

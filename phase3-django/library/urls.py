@@ -1,5 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from library.views import BorrowBookView
+
 from .views import (
     LibraryViewSet,
     BookViewSet,
