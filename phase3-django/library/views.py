@@ -18,9 +18,17 @@ from .serializers import (
     CategorySerializer,
     MemberSerializer,
     BorrowingSerializer,
-    ReviewSerializer
+    ReviewSerializer,
+
 )
 from .filter import BookFilter
+# Swagger decorators and tools
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
+# Custom request serializers
+from .serializers import BorrowBookSerializer, ReturnBookSerializer
+
 
 
 # ------------------ Standard CRUD ViewSets ------------------
@@ -91,59 +99,157 @@ class ReviewViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['book', 'rating']
     search_fields = ['book__title', 'comment']
-    ordering_fields = ['rating', 'created_at']
-    ordering = ['-created_at']
+    ordering_fields = ['rating', 'review_date']
+    ordering = ['-review_date']
 
 
 # ------------------ Custom API Views ------------------
 
+# class BookSearchView(generics.ListAPIView):
+#     serializer_class = BookSerializer
+#
+#     def get_queryset(self):
+#         query = self.request.query_params.get("q", "")
+#         return Book.objects.filter(
+#             Q(title__icontains=query) |
+#             Q(author__first_name__icontains=query) |
+#             Q(author__last_name__icontains=query) |
+#             Q(category__name__icontains=query)
+#         )
 class BookSearchView(generics.ListAPIView):
     serializer_class = BookSerializer
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'search', openapi.IN_QUERY,
+                description="Search by title or ISBN",
+                type=openapi.TYPE_STRING,
+                required=False,
+            )
+        ]
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
-        query = self.request.query_params.get("q", "")
-        return Book.objects.filter(
-            Q(title__icontains=query) |
-            Q(author__first_name__icontains=query) |
-            Q(author__last_name__icontains=query) |
-            Q(category__name__icontains=query)
-        )
-
-
+        query = self.request.query_params.get("search", "")
+        if query:
+            return Book.objects.filter(
+                Q(title__icontains=query) |
+                Q(isbn__icontains=query)
+            )
+        else:
+            return Book.objects.all()
+# class MemberBorrowingHistoryView(generics.ListAPIView):
+#     serializer_class = BorrowingSerializer
+#
+#     def get_queryset(self):
+#         member_id = self.kwargs['id']
+#         return Borrowing.objects.filter(member_id=member_id).order_by('-borrow_date')
+#
 class MemberBorrowingHistoryView(generics.ListAPIView):
     serializer_class = BorrowingSerializer
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'member_id', openapi.IN_PATH, description="Member ID", type=openapi.TYPE_INTEGER
+            )
+        ]
+    )
     def get_queryset(self):
-        member_id = self.kwargs['id']
+        member_id = self.kwargs['member_id']
         return Borrowing.objects.filter(member_id=member_id).order_by('-borrow_date')
 
 
+
+
+# class BookAvailabilityView(APIView):
+#     def get(self, request, book_id):
+#         book = get_object_or_404(Book, book_id=book_id)
+#         available_copies = max(book.available_copies or 0, 0)  # safer to use available_copies field
+#         available = available_copies > 0
+#         return Response({
+#             'available': available,
+#             'available_copies': available_copies
+#         })
+
 class BookAvailabilityView(APIView):
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('book_id', openapi.IN_PATH, description="Book ID", type=openapi.TYPE_INTEGER)
+        ],
+        responses={200: "Availability info"}
+    )
     def get(self, request, book_id):
         book = get_object_or_404(Book, book_id=book_id)
-        available_copies = max(book.available_copies or 0, 0)  # safer to use available_copies field
+        available_copies = max(book.available_copies or 0, 0)
         available = available_copies > 0
         return Response({
             'available': available,
             'available_copies': available_copies
         })
 
+
+# class BorrowBookView(APIView):
+#     def post(self, request):
+#         book_id = request.data.get('book_id')
+#         member_id = request.data.get('member_id')
+#
+#         if not book_id or not member_id:
+#             return Response({'error': 'Missing book_id or member_id'}, status=status.HTTP_400_BAD_REQUEST)
+#
+#         book = get_object_or_404(Book, book_id=book_id)  # Fix here
+#         member = get_object_or_404(Member, member_id=member_id)  # Fix here if needed
+#
+#         if book.available_copies <= 0:
+#             return Response({'error': 'Book not available'}, status=status.HTTP_400_BAD_REQUEST)
+#
+#         if Borrowing.objects.filter(book=book, member=member, return_date__isnull=True).exists():
+#             return Response({'error': 'This member already borrowed this book and has not returned it.'}, status=HTTP_400_BAD_REQUEST)
+#
+#         borrow_date = date.today()
+#         due_date = borrow_date + timedelta(days=14)
+#
+#         Borrowing.objects.create(
+#             book=book,
+#             member=member,
+#             borrow_date=borrow_date,
+#             due_date=due_date
+#         )
+#
+#         book.available_copies -= 1
+#         book.save()
+#
+#         return Response({'message': 'Book borrowed successfully', 'available_copies': book.available_copies}, status=status.HTTP_200_OK)
+
 class BorrowBookView(APIView):
+
+    @swagger_auto_schema(
+        request_body=BorrowBookSerializer,
+        responses={
+            200: "Book borrowed successfully",
+            400: "Validation or availability error"
+        }
+    )
     def post(self, request):
-        book_id = request.data.get('book_id')
-        member_id = request.data.get('member_id')
+        serializer = BorrowBookSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if not book_id or not member_id:
-            return Response({'error': 'Missing book_id or member_id'}, status=status.HTTP_400_BAD_REQUEST)
+        book_id = serializer.validated_data['book_id']
+        member_id = serializer.validated_data['member_id']
 
-        book = get_object_or_404(Book, book_id=book_id)  # Fix here
-        member = get_object_or_404(Member, member_id=member_id)  # Fix here if needed
+        book = get_object_or_404(Book, book_id=book_id)
+        member = get_object_or_404(Member, member_id=member_id)
 
         if book.available_copies <= 0:
             return Response({'error': 'Book not available'}, status=status.HTTP_400_BAD_REQUEST)
 
         if Borrowing.objects.filter(book=book, member=member, return_date__isnull=True).exists():
-            return Response({'error': 'This member already borrowed this book and has not returned it.'}, status=HTTP_400_BAD_REQUEST)
+            return Response({'error': 'This member already borrowed this book and has not returned it.'}, status=status.HTTP_400_BAD_REQUEST)
 
         borrow_date = date.today()
         due_date = borrow_date + timedelta(days=14)
@@ -160,13 +266,51 @@ class BorrowBookView(APIView):
 
         return Response({'message': 'Book borrowed successfully', 'available_copies': book.available_copies}, status=status.HTTP_200_OK)
 
-class ReturnBookView(APIView):
-    def post(self, request):
-        book_id = request.data.get('book_id')
-        member_id = request.data.get('member_id')
 
-        if not book_id or not member_id:
-            return Response({'error': 'Missing book_id or member_id'}, status=400)
+
+# class ReturnBookView(APIView):
+#     def post(self, request):
+#         book_id = request.data.get('book_id')
+#         member_id = request.data.get('member_id')
+#
+#         if not book_id or not member_id:
+#             return Response({'error': 'Missing book_id or member_id'}, status=400)
+#
+#         borrowing = Borrowing.objects.filter(
+#             book_id=book_id,
+#             member_id=member_id,
+#             return_date__isnull=True
+#         ).first()
+#
+#         if not borrowing:
+#             return Response({'error': 'No active borrowing found'}, status=400)
+#
+#         borrowing.return_date = timezone.now()
+#         borrowing.save()
+#
+#         book = borrowing.book
+#         book.available_copies +=1
+#         book.save()
+#
+#         return Response({'message': 'Book returned successfully', 'available_copies': book.available_copies}, status=status.HTTP_200_OK)
+
+
+class ReturnBookView(APIView):
+
+    @swagger_auto_schema(
+        request_body=ReturnBookSerializer,
+        responses={
+            200: "Book returned successfully",
+            400: "Validation or borrowing not found"
+        }
+    )
+    def post(self, request):
+        serializer = ReturnBookSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+
+        book_id = serializer.validated_data['book_id']
+        member_id = serializer.validated_data['member_id']
 
         borrowing = Borrowing.objects.filter(
             book_id=book_id,
@@ -181,13 +325,60 @@ class ReturnBookView(APIView):
         borrowing.save()
 
         book = borrowing.book
-        book.available_copies +=1
+        book.available_copies += 1
         book.save()
 
         return Response({'message': 'Book returned successfully', 'available_copies': book.available_copies}, status=status.HTTP_200_OK)
 
 
+# class StatisticsView(APIView):
+#     def get(self, request):
+#         total_books = Book.objects.count()
+#         total_members = Member.objects.count()
+#         total_borrowings = Borrowing.objects.count()
+#         currently_borrowed = Borrowing.objects.filter(return_date__isnull=True).count()
+#
+#         return Response({
+#             'total_books': total_books,
+#             'total_members': total_members,
+#             'total_borrowings': total_borrowings,
+#             'currently_borrowed': currently_borrowed
+#         })
+
 class StatisticsView(APIView):
+
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response(
+                description="Library statistics",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'total_books': openapi.Schema(
+                            type=openapi.TYPE_INTEGER,
+                            description='Total number of books',
+                            example=100
+                        ),
+                        'total_members': openapi.Schema(
+                            type=openapi.TYPE_INTEGER,
+                            description='Total number of members',
+                            example=50
+                        ),
+                        'total_borrowings': openapi.Schema(
+                            type=openapi.TYPE_INTEGER,
+                            description='Total number of borrowings',
+                            example=120
+                        ),
+                        'currently_borrowed': openapi.Schema(
+                            type=openapi.TYPE_INTEGER,
+                            description='Currently borrowed books count',
+                            example=30
+                        ),
+                    }
+                )
+            )
+        }
+    )
     def get(self, request):
         total_books = Book.objects.count()
         total_members = Member.objects.count()
@@ -200,7 +391,6 @@ class StatisticsView(APIView):
             'total_borrowings': total_borrowings,
             'currently_borrowed': currently_borrowed
         })
-
 
 # @api_view(['POST'])
 # def borrow_book(request):

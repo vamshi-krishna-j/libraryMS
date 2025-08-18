@@ -104,3 +104,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         if not (1 <= value <= 5):
             raise serializers.ValidationError("Rating must be between 1 and 5.")
         return value
+
+class BorrowBookSerializer(serializers.Serializer):
+    book_id = serializers.IntegerField()
+    member_id = serializers.IntegerField()
+
+class ReturnBookSerializer(serializers.Serializer):
+    book_id = serializers.IntegerField()
+    member_id = serializers.IntegerField()

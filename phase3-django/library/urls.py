@@ -32,12 +32,10 @@ urlpatterns = [
 
     # Custom API endpoints
     path('api/books/search/', BookSearchView.as_view(), name='book-search'),
-    path('api/members/<int:id>/borrowings/', MemberBorrowingHistoryView.as_view(), name='member-borrowing-history'),
-    path('api/books/<int:id>/availability/', BookAvailabilityView.as_view(), name='book-availability'),
+    path('api/members/<int:member_id>/borrowings/', MemberBorrowingHistoryView.as_view(), name='member-borrowing-history'),
+    path('api/books/<int:book_id>/availability/', BookAvailabilityView.as_view(), name='book-availability'),
     path('api/books/borrow/', BorrowBookView.as_view(), name='borrow-book'),
     path('api/books/return/', ReturnBookView.as_view(), name='return-book'),
-    path('api/statistics/', StatisticsView.as_view(), name='library-statistics'),
-    # path('api/books/borrow/', borrow_book, name='borrow-book'),
-    # path('api/books/return/', return_book, name='return-book'),
-    # path('api/statistics/', library_statistics, name='library-statistics')
+    path('api/statistics/', StatisticsView.as_view(), name='statistics')
+
 ]

@@ -1,0 +1,1351 @@
+swagger: '2.0'
+info:
+  title: Library Management API
+  description: API documentation for the Library Management System
+  termsOfService: https://www.example.com/terms/
+  contact:
+    email: vamshikrishnajanampelly@gmail.com
+  license:
+    name: BSD License
+  version: v1
+host: 127.0.0.1:8000
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /api/books/borrow/:
+    post:
+      operationId: api_books_borrow_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/BorrowBook'
+      responses:
+        '200':
+          description: Book borrowed successfully
+        '400':
+          description: Validation or availability error
+      tags:
+      - api
+    parameters: []
+  /api/books/return/:
+    post:
+      operationId: api_books_return_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ReturnBook'
+      responses:
+        '200':
+          description: Book returned successfully
+        '400':
+          description: Validation or borrowing not found
+      tags:
+      - api
+    parameters: []
+  /api/books/search/:
+    get:
+      operationId: api_books_search_list
+      description: ''
+      parameters:
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: Search by title or ISBN
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Book'
+      tags:
+      - api
+    parameters: []
+  /api/books/{book_id}/availability/:
+    get:
+      operationId: api_books_availability_list
+      description: ''
+      parameters:
+      - name: book_id
+        in: path
+        description: Book ID
+        type: integer
+        required: true
+      responses:
+        '200':
+          description: Availability info
+      tags:
+      - api
+    parameters:
+    - name: book_id
+      in: path
+      required: true
+      type: string
+  /api/members/{member_id}/borrowings/:
+    get:
+      operationId: api_members_borrowings_list
+      description: ''
+      parameters:
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Borrowing'
+      tags:
+      - api
+    parameters:
+    - name: member_id
+      in: path
+      required: true
+      type: string
+  /api/statistics/:
+    get:
+      operationId: api_statistics_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: Library statistics
+          schema:
+            type: object
+            properties:
+              total_books:
+                description: Total number of books
+                type: integer
+                example: 100
+              total_members:
+                description: Total number of members
+                type: integer
+                example: 50
+              total_borrowings:
+                description: Total number of borrowings
+                type: integer
+                example: 120
+              currently_borrowed:
+                description: Currently borrowed books count
+                type: integer
+                example: 30
+      tags:
+      - api
+    parameters: []
+  /authors/:
+    get:
+      operationId: authors_list
+      description: ''
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Author'
+      tags:
+      - authors
+    post:
+      operationId: authors_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Author'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Author'
+      tags:
+      - authors
+    parameters: []
+  /authors/{author_id}/:
+    get:
+      operationId: authors_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Author'
+      tags:
+      - authors
+    put:
+      operationId: authors_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Author'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Author'
+      tags:
+      - authors
+    patch:
+      operationId: authors_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Author'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Author'
+      tags:
+      - authors
+    delete:
+      operationId: authors_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - authors
+    parameters:
+    - name: author_id
+      in: path
+      description: A unique integer value identifying this author.
+      required: true
+      type: integer
+  /books/:
+    get:
+      operationId: books_list
+      description: ''
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Book'
+      tags:
+      - books
+    post:
+      operationId: books_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Book'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Book'
+      tags:
+      - books
+    parameters: []
+  /books/{book_id}/:
+    get:
+      operationId: books_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Book'
+      tags:
+      - books
+    put:
+      operationId: books_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Book'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Book'
+      tags:
+      - books
+    patch:
+      operationId: books_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Book'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Book'
+      tags:
+      - books
+    delete:
+      operationId: books_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - books
+    parameters:
+    - name: book_id
+      in: path
+      description: A unique integer value identifying this book.
+      required: true
+      type: integer
+  /borrowings/:
+    get:
+      operationId: borrowings_list
+      description: ''
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Borrowing'
+      tags:
+      - borrowings
+    post:
+      operationId: borrowings_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Borrowing'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Borrowing'
+      tags:
+      - borrowings
+    parameters: []
+  /borrowings/{borrowing_id}/:
+    get:
+      operationId: borrowings_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Borrowing'
+      tags:
+      - borrowings
+    put:
+      operationId: borrowings_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Borrowing'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Borrowing'
+      tags:
+      - borrowings
+    patch:
+      operationId: borrowings_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Borrowing'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Borrowing'
+      tags:
+      - borrowings
+    delete:
+      operationId: borrowings_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - borrowings
+    parameters:
+    - name: borrowing_id
+      in: path
+      description: A unique integer value identifying this borrowing.
+      required: true
+      type: integer
+  /categories/:
+    get:
+      operationId: categories_list
+      description: ''
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Category'
+      tags:
+      - categories
+    post:
+      operationId: categories_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Category'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Category'
+      tags:
+      - categories
+    parameters: []
+  /categories/{category_id}/:
+    get:
+      operationId: categories_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Category'
+      tags:
+      - categories
+    put:
+      operationId: categories_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Category'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Category'
+      tags:
+      - categories
+    patch:
+      operationId: categories_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Category'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Category'
+      tags:
+      - categories
+    delete:
+      operationId: categories_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - categories
+    parameters:
+    - name: category_id
+      in: path
+      description: A unique value identifying this category.
+      required: true
+      type: integer
+  /libraries/:
+    get:
+      operationId: libraries_list
+      description: ''
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Library'
+      tags:
+      - libraries
+    post:
+      operationId: libraries_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Library'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Library'
+      tags:
+      - libraries
+    parameters: []
+  /libraries/{library_id}/:
+    get:
+      operationId: libraries_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Library'
+      tags:
+      - libraries
+    put:
+      operationId: libraries_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Library'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Library'
+      tags:
+      - libraries
+    patch:
+      operationId: libraries_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Library'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Library'
+      tags:
+      - libraries
+    delete:
+      operationId: libraries_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - libraries
+    parameters:
+    - name: library_id
+      in: path
+      description: A unique integer value identifying this lib.
+      required: true
+      type: integer
+  /members/:
+    get:
+      operationId: members_list
+      description: ''
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Member'
+      tags:
+      - members
+    post:
+      operationId: members_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Member'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Member'
+      tags:
+      - members
+    parameters: []
+  /members/{member_id}/:
+    get:
+      operationId: members_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Member'
+      tags:
+      - members
+    put:
+      operationId: members_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Member'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Member'
+      tags:
+      - members
+    patch:
+      operationId: members_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Member'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Member'
+      tags:
+      - members
+    delete:
+      operationId: members_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - members
+    parameters:
+    - name: member_id
+      in: path
+      description: A unique integer value identifying this member.
+      required: true
+      type: integer
+  /reviews/:
+    get:
+      operationId: reviews_list
+      description: ''
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Review'
+      tags:
+      - reviews
+    post:
+      operationId: reviews_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Review'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Review'
+      tags:
+      - reviews
+    parameters: []
+  /reviews/{review_id}/:
+    get:
+      operationId: reviews_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Review'
+      tags:
+      - reviews
+    put:
+      operationId: reviews_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Review'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Review'
+      tags:
+      - reviews
+    patch:
+      operationId: reviews_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Review'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Review'
+      tags:
+      - reviews
+    delete:
+      operationId: reviews_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - reviews
+    parameters:
+    - name: review_id
+      in: path
+      description: A unique integer value identifying this review.
+      required: true
+      type: integer
+definitions:
+  BorrowBook:
+    required:
+    - book_id
+    - member_id
+    type: object
+    properties:
+      book_id:
+        title: Book id
+        type: integer
+      member_id:
+        title: Member id
+        type: integer
+  ReturnBook:
+    required:
+    - book_id
+    - member_id
+    type: object
+    properties:
+      book_id:
+        title: Book id
+        type: integer
+      member_id:
+        title: Member id
+        type: integer
+  Book:
+    required:
+    - title
+    type: object
+    properties:
+      book_id:
+        title: Book id
+        type: integer
+        readOnly: true
+      title:
+        title: Title
+        type: string
+        maxLength: 100
+        minLength: 1
+      isbn:
+        title: Isbn
+        type: string
+        maxLength: 20
+        x-nullable: true
+      publication_date:
+        title: Publication date
+        type: string
+        format: date
+        x-nullable: true
+      total_copies:
+        title: Total copies
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      available_copies:
+        title: Available copies
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        x-nullable: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        x-nullable: true
+      library:
+        title: Library
+        type: integer
+        x-nullable: true
+  Borrowing:
+    required:
+    - borrow_date
+    - due_date
+    type: object
+    properties:
+      borrowing_id:
+        title: Borrowing id
+        type: integer
+        readOnly: true
+      borrow_date:
+        title: Borrow date
+        type: string
+        format: date
+      due_date:
+        title: Due date
+        type: string
+        format: date
+      return_date:
+        title: Return date
+        type: string
+        format: date
+        x-nullable: true
+      late_fee:
+        title: Late fee
+        type: string
+        format: decimal
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        x-nullable: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        x-nullable: true
+      member:
+        title: Member
+        type: integer
+        x-nullable: true
+      book:
+        title: Book
+        type: integer
+        x-nullable: true
+  Author:
+    type: object
+    properties:
+      author_id:
+        title: Author id
+        type: integer
+        readOnly: true
+      first_name:
+        title: First name
+        type: string
+        maxLength: 50
+        x-nullable: true
+      last_name:
+        title: Last name
+        type: string
+        maxLength: 50
+        x-nullable: true
+      birth_date:
+        title: Birth date
+        type: string
+        format: date
+        x-nullable: true
+      nationality:
+        title: Nationality
+        type: string
+        maxLength: 50
+        x-nullable: true
+      biography:
+        title: Biography
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        x-nullable: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        x-nullable: true
+  Category:
+    required:
+    - category_id
+    - name
+    type: object
+    properties:
+      category_id:
+        title: Category id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      name:
+        title: Name
+        type: string
+        maxLength: 100
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        x-nullable: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        x-nullable: true
+  Library:
+    required:
+    - name
+    type: object
+    properties:
+      library_id:
+        title: Library id
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 50
+        minLength: 1
+      campus_location:
+        title: Campus location
+        type: string
+        maxLength: 50
+        x-nullable: true
+      contact_email:
+        title: Contact email
+        type: string
+        format: email
+        maxLength: 50
+        x-nullable: true
+      phone_number:
+        title: Phone number
+        type: string
+        maxLength: 12
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        x-nullable: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        x-nullable: true
+  Member:
+    type: object
+    properties:
+      member_id:
+        title: Member id
+        type: integer
+        readOnly: true
+      first_name:
+        title: First name
+        type: string
+        maxLength: 50
+      last_name:
+        title: Last name
+        type: string
+        maxLength: 50
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      phone:
+        title: Phone
+        type: string
+        maxLength: 20
+      member_type:
+        title: Member type
+        type: string
+        enum:
+        - student
+        - faculty
+      registration_date:
+        title: Registration date
+        type: string
+        format: date
+  Review:
+    required:
+    - rating
+    - member
+    - book
+    type: object
+    properties:
+      review_id:
+        title: Review id
+        type: integer
+        readOnly: true
+      rating:
+        title: Rating
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      comment:
+        title: Comment
+        type: string
+        x-nullable: true
+      review_date:
+        title: Review date
+        type: string
+        format: date
+        readOnly: true
+      member:
+        title: Member
+        type: integer
+      book:
+        title: Book
+        type: integer
