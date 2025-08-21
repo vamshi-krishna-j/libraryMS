@@ -132,7 +132,7 @@ class Review(models.Model):
     book = models.ForeignKey(Book, models.DO_NOTHING)
     rating = models.IntegerField()
     comment = models.TextField(blank=True, null=True)
-    review_date = models.DateField(auto_now_add=True)
+    review_date = models.DateField(auto_now_add=True )
 
     class Meta:
         managed = True

@@ -1,0 +1,13 @@
+# .coveragerc
+[run]
+omit =
+    */migrations/*
+    */tests/*
+    manage.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __str__
+    if self\.debug
+    raise NotImplementedError
